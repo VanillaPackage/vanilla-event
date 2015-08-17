@@ -28,6 +28,9 @@ class EventListenerTest extends PHPUnit_Framework_TestCase
         $count = 0;
         $countCallback = function () use (&$count) { $count++; };
 
+        // Global event listener.
+        $this->assertInstanceOf(EventListener::class, EventListener::$global);
+
         // Invalid.
         $this->assertSame(false, $eventListener->on("*", $noopCallback));
         $this->assertSame(false, $eventListener->on("!!INVALID!!", $noopCallback));

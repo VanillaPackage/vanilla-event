@@ -7,6 +7,12 @@ use Rentalhost\VanillaParameter\Parameter;
 class EventListener
 {
     /**
+     * Store global event listener.
+     * @var self
+     */
+    public static $global;
+
+    /**
      * Stores listeners.
      * @var EventRegister[]
      */
@@ -180,3 +186,6 @@ class EventListener
         return $eventHandler;
     }
 }
+
+// Initialize global event listener.
+EventListener::$global = new EventListener;
