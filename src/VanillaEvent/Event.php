@@ -2,6 +2,10 @@
 
 namespace Rentalhost\VanillaEvent;
 
+/**
+ * Class Event
+ * @package Rentalhost\VanillaEvent
+ */
 class Event
 {
     /**

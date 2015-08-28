@@ -4,6 +4,10 @@ namespace Rentalhost\VanillaEvent;
 
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Class EventListenerTest
+ * @package Rentalhost\VanillaEvent
+ */
 class EventListenerTest extends PHPUnit_Framework_TestCase
 {
     /**

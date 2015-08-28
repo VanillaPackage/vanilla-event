@@ -4,6 +4,10 @@ namespace Rentalhost\VanillaEvent;
 
 use Rentalhost\VanillaParameter\Parameter;
 
+/**
+ * Class EventListener
+ * @package Rentalhost\VanillaEvent
+ */
 class EventListener
 {
     /**
@@ -68,7 +72,7 @@ class EventListener
         }
 
         foreach ($this->registers as $key => $register) {
-            if (in_array($register, $registers)) {
+            if (in_array($register, $registers, true)) {
                 unset( $this->registers[$key] );
             }
         }
@@ -190,7 +194,7 @@ class EventListener
 
             // If event is "one", remove it from registers.
             if ($eventRegister->one === true) {
-                unset( $this->registers[array_search($eventRegister, $this->registers)] );
+                unset( $this->registers[array_search($eventRegister, $this->registers, true)] );
 
                 $this->registers = array_values($this->registers);
             }
@@ -201,4 +205,6 @@ class EventListener
 }
 
 // Initialize global event listener.
+// @codeCoverageIgnoreStart
 EventListener::$global = new EventListener;
+// @codeCoverageIgnoreEnd
