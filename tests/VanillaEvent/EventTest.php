@@ -11,12 +11,12 @@ class EventTest extends PHPUnit_Framework_TestCase
      */
     public function testProperties()
     {
-        $this->assertClassHasAttribute("index", Event::class);
-        $this->assertClassHasAttribute("register", Event::class);
-        $this->assertClassHasAttribute("data", Event::class);
-        $this->assertClassHasAttribute("returnedData", Event::class);
-        $this->assertClassHasAttribute("registeredData", Event::class);
-        $this->assertClassHasAttribute("target", Event::class);
-        $this->assertClassHasAttribute("currentTarget", Event::class);
+        static::assertClassHasAttribute('index', Event::class);
+        static::assertClassHasAttribute('register', Event::class);
+        static::assertClassHasAttribute('data', Event::class);
+        static::assertClassHasAttribute('returnedData', Event::class);
+        static::assertClassHasAttribute('registeredData', Event::class);
+        static::assertClassHasAttribute('target', Event::class);
+        static::assertClassHasAttribute('currentTarget', Event::class);
     }
 }

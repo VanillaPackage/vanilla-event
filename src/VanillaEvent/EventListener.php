@@ -23,15 +23,17 @@ class EventListener
      */
     public function __construct()
     {
-        $this->registers = [];
+        $this->registers = [ ];
     }
 
     /**
      * Add an event listener.
+     *
      * @param  string   $name     Event name.
      * @param  callable $callback Event callback.
      * @param  mixed    $data     Event data.
      * @param  integer  $priority Event priority.
+     *
      * @return EventRegister|false
      */
     public function on($name, $callback, $data = null, $priority = 5)
@@ -39,7 +41,8 @@ class EventListener
         $eventRegister = new EventRegister($this, $name, $callback, $data, $priority);
 
         if (!$eventRegister->name
-        ||  $eventRegister->name === "*") {
+            || $eventRegister->name === '*'
+        ) {
             return false;
         }
 
@@ -50,13 +53,15 @@ class EventListener
 
     /**
      * Remove event registers.
-     * @param  string   $name?     Event name or namespace.
-     * @param  callable $callback? Event callable.
-     * @return integer Number of removed events.
+     *
+     * @var string?   $name     Event name or namespace.
+     * @var callable? $callback Event callable.
+     *
+     * @return int Number of removed events.
      */
     public function off()
     {
-        $registers = call_user_func_array([ $this, "filter" ], func_get_args());
+        $registers = call_user_func_array([ $this, 'filter' ], func_get_args());
 
         if (!$registers) {
             return 0;
@@ -64,7 +69,7 @@ class EventListener
 
         foreach ($this->registers as $key => $register) {
             if (in_array($register, $registers)) {
-                unset($this->registers[$key]);
+                unset( $this->registers[$key] );
             }
         }
 
@@ -75,11 +80,13 @@ class EventListener
 
     /**
      * Add an event listener that will run one time.
+     *
      * @param  string   $name     Event name.
      * @param  callable $callback Event callback.
      * @param  mixed    $data     Event data.
      * @param  integer  $priority Event priority.
-     * @return void
+     *
+     * @return false|EventRegister
      */
     public function one($name, $callback, $data = null, $priority = 5)
     {
@@ -95,7 +102,7 @@ class EventListener
      */
     public function has()
     {
-        return (bool) call_user_func_array([ $this, "filter" ], func_get_args());
+        return (bool) call_user_func_array([ $this, 'filter' ], func_get_args());
     }
 
     /**
@@ -104,14 +111,15 @@ class EventListener
      */
     public function filter()
     {
-        $parameters = Parameter::organize(func_get_args())
+        Parameter::organize(func_get_args())
             ->expects(1)
-            ->add($filterNames, "string")
-            ->add($filterCallback, "callable");
+            ->add($filterNames, 'string')
+            ->add($filterCallback, 'callable');
 
         if (!$filterNames
-        &&  !$filterCallback) {
-            return [];
+            && !$filterCallback
+        ) {
+            return [ ];
         }
 
         // Filters data.
@@ -119,27 +127,30 @@ class EventListener
         $filterName = null;
 
         // Match name/namespace filters.
-        if (!empty($filterNames)) {
+        if ($filterNames) {
             EventRegister::splitNames($filterNames, $filterName, $filterNamespace);
         }
 
         // Collect registers.
-        $registers = [];
+        $registers = [ ];
 
         foreach ($this->registers as $register) {
             if ($filterNamespace !== null
-            &&  $filterNamespace !== $register->namespace) {
+                && $filterNamespace !== $register->namespace
+            ) {
                 continue;
             }
 
             if ($filterName !== null
-            &&  $filterName !== $register->name
-            &&  $filterName !== "*") {
+                && $filterName !== $register->name
+                && $filterName !== '*'
+            ) {
                 continue;
             }
 
             if ($filterCallback !== null
-            &&  $filterCallback !== $register->callback) {
+                && $filterCallback !== $register->callback
+            ) {
                 continue;
             }
 
@@ -151,21 +162,23 @@ class EventListener
 
     /**
      * Fire an event.
+     *
      * @param string $name           Event name.
      * @param mixed  $additionalData Event additional data.
+     *
      * @return Event
      */
     public function fire($name, $additionalData = null)
     {
         $eventHandler = new Event;
         $eventHandler->target = $name;
+        $eventHandler->data = $additionalData;
 
         $eventRegisters = $this->filter($name);
 
         foreach ($eventRegisters as $key => $eventRegister) {
             $eventHandler->index = $key;
             $eventHandler->register = $eventRegister;
-            $eventHandler->data = $additionalData;
             $eventHandler->registeredData = $eventRegister->data;
             $eventHandler->currentTarget = "{$eventRegister->namespace}::{$eventRegister->name}";
             $eventHandler->returnedData = call_user_func($eventRegister->callback, $eventHandler);
@@ -177,7 +190,7 @@ class EventListener
 
             // If event is "one", remove it from registers.
             if ($eventRegister->one === true) {
-                unset($this->registers[array_search($eventRegister, $this->registers)]);
+                unset( $this->registers[array_search($eventRegister, $this->registers)] );
 
                 $this->registers = array_values($this->registers);
             }
